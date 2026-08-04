@@ -1,10 +1,14 @@
 {
     "python.defaultInterpreterPath": "backend/.venv/bin/python",
     "python.analysis.extraPaths": [
-        "./backend"
+        "${workspaceFolder}/backend"
     ],
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.typeCheckingMode": "basic",
     "python.terminal.activateEnvInSelectedTerminal": true,
     "editor.formatOnSave": true,
-    "python.analysis.typeCheckingMode": "basic",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
     "python-envs.defaultEnvManager": "ms-python.python:system"
 }
