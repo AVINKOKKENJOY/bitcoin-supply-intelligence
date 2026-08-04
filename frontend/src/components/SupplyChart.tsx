@@ -1,55 +1,68 @@
 "use client";
 import { useEffect, useRef } from 'react';
-import { createChart, ColorType } from 'lightweight-charts';
+import { createChart, ColorType, IChartApi } from 'lightweight-charts';
 
-export const SupplyChart = () => {
-    const chartContainerRef = useRef<HTMLDivElement>(null);
+// Step 1: Define exactly what data this chart accepts
+interface SupplyChartProps {
+  data: {
+    timestamp: string;
+    circulating_supply: number;
+  }[];
+}
 
-    useEffect(() => {
-        if (!chartContainerRef.current) return;
+export const SupplyChart = ({ data }: SupplyChartProps) => {
+  const chartContainerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<IChartApi | null>(null);
 
-        const chart = createChart(chartContainerRef.current, {
-            layout: {
-                background: { type: ColorType.Solid, color: 'transparent' },
-                textColor: '#D1D5DB',
-            },
-            grid: {
-                vertLines: { color: 'rgba(42, 46, 57, 0.5)' },
-                horzLines: { color: 'rgba(42, 46, 57, 0.5)' },
-            },
-            width: chartContainerRef.current.clientWidth,
-            height: 400,
-        });
+  useEffect(() => {
+    if (!chartContainerRef.current) return;
 
-        const series = chart.addAreaSeries({
-            lineColor: '#f7931a',
-            topColor: 'rgba(247, 147, 26, 0.4)',
-            bottomColor: 'rgba(247, 147, 26, 0.0)',
-        });
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: ColorType.Solid, color: 'transparent' },
+        textColor: '#71717a',
+      },
+      grid: {
+        vertLines: { color: 'rgba(39, 39, 42, 0.3)' },
+        horzLines: { color: 'rgba(39, 39, 42, 0.3)' },
+      },
+      width: chartContainerRef.current.clientWidth,
+      height: 400,
+    });
 
-        // Mock Data for Graphic Visualization
-        series.setData([
-            { time: '2024-01-01', value: 19500000 },
-            { time: '2024-02-01', value: 19550000 },
-            { time: '2024-03-01', value: 19600000 },
-            { time: '2024-04-01', value: 19680000 },
-            { time: '2024-05-01', value: 19700000 },
-        ]);
+    chartRef.current = chart;
 
-        chart.timeScale().fitContent();
+    const series = chart.addAreaSeries({
+      lineColor: '#f7931a',
+      topColor: 'rgba(247, 147, 26, 0.2)',
+      bottomColor: 'rgba(247, 147, 26, 0)',
+      lineWidth: 2,
+    });
 
-        const handleResize = () => {
-            if (chartContainerRef.current) {
-                chart.applyOptions({ width: chartContainerRef.current.clientWidth });
-            }
-        };
+    // Step 2: Format the incoming data for TradingView
+    if (data && data.length > 0) {
+      const formattedData = data.map((d) => ({
+        time: d.timestamp.split('T')[0],
+        value: d.circulating_supply,
+      })).sort((a, b) => a.time.localeCompare(b.time));
+      
+      series.setData(formattedData);
+    }
 
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            chart.remove();
-        };
-    }, []);
+    chart.timeScale().fitContent();
 
-    return <div ref={chartContainerRef} className="w-full h-[400px]" />;
+    const handleResize = () => {
+      if (chartContainerRef.current && chartRef.current) {
+        chartRef.current.applyOptions({ width: chartContainerRef.current.clientWidth });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      chart.remove();
+    };
+  }, [data]); // Step 3: Redraw when data changes
+
+  return <div ref={chartContainerRef} className="w-full" />;
 };

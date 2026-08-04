@@ -3,12 +3,11 @@
     "python.analysis.extraPaths": [
         "${workspaceFolder}/backend"
     ],
-    "python.analysis.autoImportCompletions": true,
     "python.analysis.typeCheckingMode": "basic",
-    "python.terminal.activateEnvInSelectedTerminal": true,
-    "editor.formatOnSave": true,
+    "typescript.tsdk": "frontend/node_modules/typescript/lib",
+    "typescript.preferences.importModuleSpecifier": "non-relative",
+    "javascript.preferences.importModuleSpecifier": "non-relative",
     "editor.codeActionsOnSave": {
         "source.organizeImports": "explicit"
-    },
-    "python-envs.defaultEnvManager": "ms-python.python:system"
+    }
 }
