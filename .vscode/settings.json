@@ -5,9 +5,13 @@
     ],
     "python.analysis.typeCheckingMode": "basic",
     "typescript.tsdk": "frontend/node_modules/typescript/lib",
-    "typescript.preferences.importModuleSpecifier": "non-relative",
     "javascript.preferences.importModuleSpecifier": "non-relative",
+    "typescript.preferences.importModuleSpecifier": "non-relative",
     "editor.codeActionsOnSave": {
         "source.organizeImports": "explicit"
+    },
+    "python.analysis.autoImportCompletions": true,
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none"
     }
 }
